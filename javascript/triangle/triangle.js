@@ -5,25 +5,17 @@
 
 export class Triangle {
   constructor(...sides) {
-    this.side1 = sides[0];
-    this.side2 = sides[1];
-    this.side3 = sides[2];
+    this.sides = sides;
     this.isLengthGreaterThanZero();
-    this.isTwoSidesLengthGreaterThanThird();
+    this.isTwoSidesLengthGreaterThanThird(); 
     this.isTriangleValid();
+    this.findUniqueSides = new Set(sides);
   }
   isLengthGreaterThanZero() {
-    const {side1, side2, side3} = this;
-    return (
-      side1 > 0 && 
-      side2 > 0 && 
-      side3 > 0 
-    ) ? true : false;
+    return this.sides.every((length) => length > 0);
   }
   isTwoSidesLengthGreaterThanThird() {
-    const {side1, side2, side3} = this;
-    const sideLengths = [side1, side2, side3];
-    const longestToShortest = sideLengths.sort((a, b) => b - a);
+    const longestToShortest = this.sides.sort((a, b) => b - a);
     const longest = longestToShortest[0];
     const sumOfTwoLengths = longestToShortest[1] + longestToShortest[2];
     return (sumOfTwoLengths >= longest) ? true : false; 
@@ -35,34 +27,21 @@ export class Triangle {
     ) ? true : false;
   }
   get isEquilateral() {
-    const {side1, side2, side3} = this;
     return (
-      this.isTriangleValid() && (
-        side1 === side2 &&
-        side2 === side3 && 
-        side1 === side3
-        )
+      this.isTriangleValid() && 
+      this.findUniqueSides.size === 1
     ) ? true : false;
   }
   get isIsosceles() {
-    const {side1, side2, side3} = this;
     return (
-      this.isTriangleValid() && (
-        side1 === side2 ||
-        side2 === side3 || 
-        side1 === side3
-        )
+      this.isTriangleValid() && 
+      this.findUniqueSides.size <= 2
     ) ? true : false;
   }
   get isScalene() {
-    const {side1, side2, side3} = this;
     return (
-      this.isTriangleValid() && (
-        side1 !== side2 &&
-        side1 !== side3 &&
-        side2 !== side3
-      )
+      this.isTriangleValid() && 
+      this.findUniqueSides.size === 3
     ) ? true : false;
-    
   }
 }
